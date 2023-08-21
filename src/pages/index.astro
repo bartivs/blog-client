@@ -1,28 +1,33 @@
 ---
-import Layout from "../layouts/BlogPost.astro";
+import Page from "../components/Page.astro";
+import { getCollection } from "../lib/keystone";
+import type { Post, Tag } from "../interfaces/keystone";
+import FormattedDate from "../components/FormattedDate.astro";
+import PostsList from "../components/PostsList.astro";
+import TagContainer from "../components/TagContainer.astro";
+
+const posts = (await getCollection("post")) as Post[];
+const tags = (await getCollection("tag")) as Tag[];
 ---
 
-<Layout
-  title="Welcome!"
-  description="A little about me."
-  pubDate={new Date("July 30 2023")}
->
-  <p>
-    Hello, my name is Barti! I'm a Full Stack software developer located in Paraguay. My journey
-    into the world of technology began when I started my engineering degree in
-    Telecommunications. Out of curiosity, I started into learning about Linux
-    systems during my early years at the University.
-  </p>
-  <p>
-    As I progressed through my engineering degree, I discovered my true passion
-    for software development. In the last semesters of my studies, I decided to
-    focus solely on focus into honing my skills in this field. By late 2021, all my efforts
-    paid off when I landed my first full-time job as a Full Stack developer, and
-    since then, there's been no looking back!
-  </p>
-  <p>
-    I'm incredibly passionate about creating innovative solutions and constantly
-    expanding my knowledge in the ever-evolving world of technology.
-  </p>
+<Page title="Welcome!" description="">
+  <div>
+    <div>
+      <h1 class="text-3xl mt-2">Full Stack Developer</h1>
+      <p class="text-lg mt-2">
+        I'm Telecomunications Engineer, that pivoted into Software Development.
+      </p>
+    </div>
 
-</Layout>
+    <h1 class="text-3xl my-2">Some posts...</h1>
+    <div class="flex">
+      <div>
+        <h4 class="text-xs my-2">Filter by topic</h4>
+        <div class="flex items-center lg:w-40">
+          {tags.map((tag) => <TagContainer tag={tag} />)}
+        </div>
+      </div>
+      <PostsList posts={posts} />
+    </div>
+  </div>
+</Page>
