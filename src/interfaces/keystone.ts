@@ -5,7 +5,7 @@ export interface Post {
     content: string;
     author?: User | null;
     authorId?: string | null;
-    tags: Tag[];
+    tags?: Tag[];
     pubDate: string;
     description: string;
 }
