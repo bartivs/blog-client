@@ -1,0 +1,12 @@
+---
+import type { Tag } from '../interfaces/keystone';
+interface Props{
+    tag: Tag
+}
+
+
+const { tag } = Astro.props;
+---
+
+
+<span class=" text-xs border-2 p-1 mx-1 rounded-sm">{tag.name}</span>
