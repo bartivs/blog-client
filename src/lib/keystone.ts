@@ -1,4 +1,4 @@
-import type { Post } from "../interfaces/keystone";
+import type { Post, Tag } from "../interfaces/keystone";
 
 interface Props {
     queryGraphQL?: string;
@@ -11,7 +11,7 @@ interface Props {
  */
 export default async function fetchApi({
     queryGraphQL,
-}: Props): Promise<any>{
+}: Props): Promise<any> {
 
     const url = new URL(`${import.meta.env.KEYSTONE_URL}/api/graphql`);
 
@@ -24,13 +24,13 @@ export default async function fetchApi({
     });
     let { data } = await res.json();
 
-    return data ;
+    return data;
 }
 
 
 export async function getCollection(name: "post" | "tag") {
     if (name === "post") {
-        const  {posts }  = await fetchApi({
+        const { posts } = await fetchApi({
             queryGraphQL: `
             query Query {
                 posts {
@@ -44,13 +44,27 @@ export async function getCollection(name: "post" | "tag") {
                 title
                 pubDate
                 description
+                tags{
+                    id
+                    name
+                }
                 } 
                 } 
       `
         })
         return posts as Post[]
     }
-    if (name === "tag") { 
-        return []
+    if (name === "tag") {
+        const {tags}=  await fetchApi({
+            queryGraphQL: `
+            query Query {
+                tags {
+                id
+                name 
+                }
+            } 
+      `
+        }) 
+        return tags as Tag[]
     }
 }
