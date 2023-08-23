@@ -1,0 +1,12 @@
+---
+import type { Tag } from "../interfaces/keystone";
+import { getCollection } from "../lib/keystone";
+import TagContainer from "./TagContainer.astro";
+
+
+const tags = (await getCollection("tag")) as Tag[];
+---
+
+<div class="flex items-center lg:w-40">
+  {tags.map((tag) => <TagContainer tag={tag} />)}
+</div>
