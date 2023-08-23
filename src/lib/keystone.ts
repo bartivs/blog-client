@@ -55,7 +55,7 @@ export async function getCollection(name: "post" | "tag") {
         return posts as Post[]
     }
     if (name === "tag") {
-        const {tags}=  await fetchApi({
+        const { tags } = await fetchApi({
             queryGraphQL: `
             query Query {
                 tags {
@@ -64,7 +64,7 @@ export async function getCollection(name: "post" | "tag") {
                 }
             } 
       `
-        }) 
+        })
         return tags as Tag[]
     }
 }
