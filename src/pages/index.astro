@@ -5,6 +5,7 @@ import type { Post, Tag } from "../interfaces/keystone";
 import FormattedDate from "../components/FormattedDate.astro";
 import PostsList from "../components/PostsList.astro";
 import TagContainer from "../components/TagContainer.astro";
+import TagsList from "../components/TagsList.astro";
 
 const posts = (await getCollection("post")) as Post[];
 const tags = (await getCollection("tag")) as Tag[];
@@ -23,9 +24,7 @@ const tags = (await getCollection("tag")) as Tag[];
     <div class="flex">
       <div>
         <h4 class="text-xs my-2">Filter by topic</h4>
-        <div class="flex items-center lg:w-40">
-          {tags.map((tag) => <TagContainer tag={tag} />)}
-        </div>
+        <TagsList/>
       </div>
       <PostsList posts={posts} />
     </div>
