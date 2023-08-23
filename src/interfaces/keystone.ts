@@ -1,8 +1,7 @@
-
 export interface Post {
     id: string;
     title: string;
-    content: string;
+    content: any;
     author?: User | null;
     authorId?: string | null;
     tags?: Tag[];
@@ -23,5 +22,4 @@ export interface User {
 export interface Tag {
     id: string;
     name: string;
-    posts: Post[];
 }
