@@ -8,5 +8,6 @@ interface Props{
 const { tag } = Astro.props;
 ---
 
-
+<a href={`/tags/${tag.id}`}>
 <span class=" text-xs border-2 p-1 mx-1 rounded-sm">{tag.name}</span>
+</a>
