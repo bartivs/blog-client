@@ -1,20 +1,35 @@
 ---
-import { CollectionEntry, getCollection } from 'astro:content';
-import BlogPost from '../../layouts/BlogPost.astro';
+import BaseHead from "../../components/BaseHead.astro";
+import Footer from "../../components/Footer.astro";
+import FormattedDate from "../../components/FormattedDate.astro";
+import Page from "../../components/Page.astro";
+import TagContainer from "../../components/TagContainer.astro";
+import { SITE_DESCRIPTION } from "../../consts";
+import type { Post } from "../../interfaces/keystone";
+import BlogPost from "../../layouts/BlogPost.astro";
+import { getCollection } from "../../lib/keystone";
+import { DocumentRenderer } from "@keystone-6/document-renderer";
 
 export async function getStaticPaths() {
-	const posts = await getCollection('blog');
-	return posts.map((post) => ({
-		params: { slug: post.slug },
-		props: post,
-	}));
+  const posts = await getCollection("post");
+  return posts?.map((post) => ({
+    params: { slug: post.id },
+    props: post,
+  }));
 }
-type Props = CollectionEntry<'blog'>;
+
+type Props = Post;
 
 const post = Astro.props;
-const { Content } = await post.render();
 ---
 
-<BlogPost {...post.data}>
-	<Content />
-</BlogPost>
+<Page title={post.title} description={post.description}>
+  <h1 class="text-4xl font-bold">
+    {post.title}
+  </h1>
+  <FormattedDate date={new Date(post.pubDate)} />
+  <div class="flex my-4">
+    {post.tags?.map((tag) => <TagContainer tag={tag} />)}
+  </div>
+  <DocumentRenderer document={post.content.document} />
+</Page>
