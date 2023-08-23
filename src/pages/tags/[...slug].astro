@@ -1,26 +1,18 @@
 ---
 import Page from "../../components/Page.astro";
 import PostsList from "../../components/PostsList.astro";
-import TagContainer from "../../components/TagContainer.astro";
+import TagsList from "../../components/TagsList.astro";
 import type { Post, Tag } from "../../interfaces/keystone";
 import fetchApi, { getCollection } from "../../lib/keystone";
 
-const tags = (await getCollection("tag")) as Tag[];
-
 export async function getStaticPaths() {
-  return tags?.map((tag) => ({
-    params: { slug: tag.id },
-    props: tag,
-  }));
-}
 
-type Props = Tag;
-
-const tag = Astro.props;
-
-const postsQuery = await fetchApi({
-  queryGraphQL: `
+  const { tags } = await fetchApi({
+            queryGraphQL: `
             query Query {
+                tags {
+                id
+                name 
                 posts {
                 id
                 author {
@@ -35,13 +27,22 @@ const postsQuery = await fetchApi({
                 tags{
                     id
                     name
+                  }
                 }
-                } 
-                } 
-      `,
-});
+                }
+            } 
+      `
+        })
+  return tags?.map((tag) => ({
+    params: { slug: tag.id },
+    props: tag,
+  }));
+}
 
-const posts = postsQuery.posts as Post[];
+type Props = Tag;
+
+const tag = Astro.props;
+
 ---
 
 <Page title="Welcome!" description="">
@@ -57,11 +58,9 @@ const posts = postsQuery.posts as Post[];
     <div class="flex">
       <div>
         <h4 class="text-xs my-2">Filter by topic</h4>
-        <div class="flex items-center lg:w-40">
-          {tags.map((tag) => <TagContainer tag={tag} />)}
-        </div>
+       <TagsList/> 
       </div>
-      <PostsList posts={posts} />
+      <PostsList posts={tag.posts} />
     </div>
   </div>
 </Page>
