@@ -2,6 +2,7 @@
 import type { Post } from "../interfaces/keystone";
 import FormattedDate from "./FormattedDate.astro";
 import TagContainer from "./TagContainer.astro";
+import TagsList from "./TagsList.astro"
 
 interface Props {
   posts: Post[];
@@ -10,22 +11,28 @@ interface Props {
 const { posts } = Astro.props;
 ---
 
-<div class="flex flex-col">
-  {
-    posts?.map((post) => (
-      <div class="border-b-2 py-2 border-white flex justify-between">
-        <div>
-          <a href={`/blog/${post.id}/`}>{post.title}</a>
-          <div class="mt-1">
-            {post.tags?.map((tag) => (
-              <TagContainer tag={tag} />
-            ))}
+<div class="flex flex-col lg:flex-row">
+  <div class="mb-4 lg:mb-0">
+    <h4 class="text-xs my-2">Filter by topic</h4>
+    <TagsList />
+  </div>
+  <div class="flex flex-col flex-1">
+    {
+      posts?.map((post) => (
+        <div class="border-b-2 py-2 border-white flex justify-between">
+          <div>
+            <a href={`/blog/${post.id}/`}>{post.title}</a>
+            <div class="mt-1">
+              {post.tags?.map((tag) => (
+                <TagContainer tag={tag} />
+              ))}
+            </div>
+          </div>
+          <div>
+            <FormattedDate date={new Date(post.pubDate)} />
           </div>
         </div>
-        <div>
-          <FormattedDate date={new Date(post.pubDate)} />
-        </div>
-      </div>
-    ))
-  }
+      ))
+    }
+  </div>
 </div>
