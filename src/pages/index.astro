@@ -21,12 +21,6 @@ const tags = (await getCollection("tag")) as Tag[];
     </div>
 
     <h1 class="text-3xl my-2">Some posts...</h1>
-    <div class="flex">
-      <div>
-        <h4 class="text-xs my-2">Filter by topic</h4>
-        <TagsList/>
-      </div>
-      <PostsList posts={posts} />
-    </div>
+    <PostsList posts={posts} />
   </div>
 </Page>
