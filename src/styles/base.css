@@ -1,0 +1,15 @@
+ @tailwind base;
+ @tailwind components;
+
+@layer components {
+	a {
+		@apply text-white;
+	}
+
+	a:hover {
+		@apply text-[#666633];
+	
+	}
+
+
+}

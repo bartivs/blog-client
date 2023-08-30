@@ -3,8 +3,7 @@
   https://github.com/HermanMartinus/bearblog/blob/297026a877bc2ab2b3bdfbd6b9f7961c350917dd/templates/styles/blog/default.css
   License MIT: https://github.com/HermanMartinus/bearblog/blob/master/LICENSE.md
  */
- @tailwind base;
- @tailwind components;
+
 
 :root {
 	--accent: #2337ff;
@@ -89,19 +88,3 @@ b {
 	font-weight: 700;
 }
 
-@layer base{
-
-}
-
-@layer components {
-	a {
-		@apply text-white;
-	}
-
-	a:hover {
-		@apply text-[#666633];
-	
-	}
-
-
-}
