@@ -17,6 +17,7 @@ export interface User {
     password: string;
     posts: Post[];
     createdAt?: Date;
+    published: boolean;
 }
 
 export interface Tag {

@@ -22,6 +22,7 @@ export default async function fetchApi({
             query: queryGraphQL,
         }),
     });
+
     let { data } = await res.json();
 
     return data;
@@ -33,7 +34,7 @@ export async function getCollection(name: "post" | "tag") {
         const { posts } = await fetchApi({
             queryGraphQL: `
             query Query {
-                posts {
+                posts(where: {published: {equals : true }}) {
                 id
                 author {
                     name
@@ -44,6 +45,7 @@ export async function getCollection(name: "post" | "tag") {
                 title
                 pubDate
                 description
+                published 
                 tags{
                     id
                     name
@@ -51,20 +53,22 @@ export async function getCollection(name: "post" | "tag") {
                 } 
                 } 
       `
-        })
-        return posts as Post[]
+        });
+
+        return posts ?? [] as Post[];
     }
     if (name === "tag") {
         const { tags } = await fetchApi({
             queryGraphQL: `
             query Query {
-                tags {
+                tags(where: {posts: {some : {published: {equals: true}} }}){
                 id
                 name 
                 }
             } 
       `
-        })
-        return tags as Tag[]
+        });
+        
+        return tags ?? [] as Tag[];
     }
 }
