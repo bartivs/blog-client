@@ -8,11 +8,11 @@ import fetchApi, { getCollection } from "../../lib/keystone";
 export async function getStaticPaths() {
   const { tags } = await fetchApi({
     queryGraphQL: `
-            query Query {
-                tags {
+              query Query {
+                tags(where: {posts: {some : {published: {equals: true}} }}) {
                 id
                 name 
-                posts {
+                posts(where: {published: {equals : true }}) {
                 id
                 author {
                     name
@@ -22,6 +22,7 @@ export async function getStaticPaths() {
                 }
                 title
                 pubDate
+                published
                 description
                 tags{
                     id
