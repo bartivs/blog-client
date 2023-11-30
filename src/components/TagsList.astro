@@ -8,5 +8,5 @@ const tags = (await getCollection("tag")) as Tag[] ?? [];
 ---
 
 <div class="flex items-center lg:w-40">
-  {tags?.map((tag) => <TagContainer tag={tag} />)}
+  { tags.length > 1 && tags?.map((tag) => <TagContainer tag={tag} />)}
 </div>
