@@ -3,7 +3,6 @@ import Header from "./Header.astro";
 import Footer from "./Footer.astro";
 import BaseHead from "./BaseHead.astro";
 
-
 interface Props {
   title: string;
   description?: string;
@@ -16,11 +15,15 @@ const { title, description } = Astro.props;
   <head>
     <BaseHead title={title} description={description ?? ""} />
   </head>
-  <body class="h-[100vh] w-[100vw] bg-slate-800">
+  <body class="h-[100vh] w-[100vw] bg-slate-800 flex flex-col">
     <Header />
-    <main>
-     <slot/> 
+    <main
+      class="flex-1 flex flex-col items-center w-full px-10"
+    >
+      <div class="w-[100%] lg:w-[50%]">
+        <slot />
+      </div>
     </main>
+    <Footer />
   </body>
-  <Footer/> 
 </html>
