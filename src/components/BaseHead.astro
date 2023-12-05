@@ -8,9 +8,9 @@ interface Props {
 	description: string;
 	image?: string;
 }
-
+const isProd = import.meta.env.PROD
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
-
+const gtagCode = import.meta.env.PUBLIC_GTAG
 const { title, description, image = '/blog-placeholder-1.jpg' } = Astro.props;
 ---
 
@@ -45,3 +45,12 @@ const { title, description, image = '/blog-placeholder-1.jpg' } = Astro.props;
 <meta property="twitter:title" content={title} />
 <meta property="twitter:description" content={description} />
 <meta property="twitter:image" content={new URL(image, Astro.url)} />
+{ isProd && <>
+<script is:inline async src={`https://www.googletagmanager.com/gtag/js?id=${gtagCode}`}></script>
+<script is:inline>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', "G-EZ31TSS0BG"  );
+</script>
+ </>}
