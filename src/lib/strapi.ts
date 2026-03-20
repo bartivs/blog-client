@@ -20,9 +20,17 @@ async function strapiFetch<T>(
 ): Promise<StrapiResponse<T[]>> {
     const params = new URLSearchParams();
     if (options.filters) {
-        Object.entries(options.filters).forEach(([key, value]) => {
-            params.append(`filters[${key}][$eq]`, value);
-        });
+        const buildFilterParams = (prefix: string, obj: any) => {
+            Object.entries(obj).forEach(([key, value]) => {
+                const newKey = prefix ? `${prefix}[${key}]` : `filters[${key}]`;
+                if (typeof value === 'object' && value !== null) {
+                    buildFilterParams(newKey, value);
+                } else {
+                    params.append(newKey, value);
+                }
+            });
+        };
+        buildFilterParams('', options.filters);
     }
 
     if (options.populate) {
@@ -72,8 +80,9 @@ async function strapiFetch<T>(
     return res.json();
 }
 
-export async function getPosts(): Promise<Post[]> {
+export async function getPosts(filters?: Record<string, any>): Promise<Post[]> {
     const response = await strapiFetch<Post>("posts", {
+        filters,
         populate: {
             thumbnail: true,
             topics: true,
@@ -86,10 +95,7 @@ export async function getPosts(): Promise<Post[]> {
     });
 
     return response.data.map((item) => ({
-        id: item.id,
-        documentId: item.documentId,
-        // @ts-ignore
-        ...item.attributes,
+        ...item,
     }));
 }
 
@@ -109,10 +115,7 @@ export async function getPostBySlug(slug: string): Promise<Post | null> {
 
     const item = response.data[0];
     return {
-        id: item.id,
-        documentId: item.documentId,
-        // @ts-ignore
-        ...item.attributes,
+        ...item
     };
 }
 
@@ -122,10 +125,7 @@ export async function getTopics(): Promise<Topic[]> {
     );
 
     return response.data.map((item) => ({
-        id: item.id,
-        documentId: item.documentId,
-        // @ts-ignore
-        ...item.attributes,
+        ...item,
     }));
 }
 
@@ -140,9 +140,6 @@ export async function getTopicBySlug(slug: string): Promise<Topic | null> {
 
     const item = response.data[0];
     return {
-        id: item.id,
-        documentId: item.documentId,
-        // @ts-ignore
-        ...item.attributes,
+        ...item,
     };
 }

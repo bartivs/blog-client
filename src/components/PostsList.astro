@@ -9,6 +9,7 @@ interface Props {
 }
 
 const { posts } = Astro.props;
+console.log('posts', posts);
 ---
 
 <div class="flex flex-col lg:flex-row">
@@ -17,7 +18,7 @@ const { posts } = Astro.props;
   </div>
   <div class="flex flex-col flex-1">
     {
-      posts?.map((post) => (
+      posts?.map((post: Post) => (
             <div class="border-b-2 py-2 border-white flex justify-between">
               <div>
                 <a href={`/posts/${post.documentId}/`}>{post.title}</a>

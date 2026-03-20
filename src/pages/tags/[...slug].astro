@@ -1,9 +1,9 @@
 ---
 import Page from "../../components/Page.astro";
 import PostsList from "../../components/PostsList.astro";
-import TagsList from "../../components/TagsList.astro";
+import TopicsList from "../../components/TopicsList.astro";
 import type { Topic } from "../../interfaces/strapi";
-import { getTopics } from "../../lib/strapi";
+import { getTopics, getPosts } from "../../lib/strapi";
 
 export async function getStaticPaths() {
   const topics = await getTopics();
@@ -16,11 +16,12 @@ export async function getStaticPaths() {
 type Props = Topic;
 
 const topic = Astro.props;
+const posts = await getPosts({ topics: { documentId: { $eq: topic.documentId } } });
 ---
 
 <Page title="Welcome!" description="">
   <div>
     <h1 class="text-3xl my-2"> Posts related to <u>{topic.name}</u>:</h1>
-    <PostsList posts={[]} />
+    <PostsList posts={posts} />
   </div>
 </Page>
