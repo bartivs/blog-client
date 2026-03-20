@@ -3,7 +3,7 @@ import BaseHead from "../../components/BaseHead.astro";
 import Footer from "../../components/Footer.astro";
 import FormattedDate from "../../components/FormattedDate.astro";
 import Page from "../../components/Page.astro";
-import TagContainer from "../../components/TagContainer.astro";
+import TopicContainer from "../../components/TopicContainer.astro";
 import { SITE_DESCRIPTION } from "../../consts";
 import type { Post } from "../../interfaces/strapi";
 import BlogPost from "../../layouts/BlogPost.astro";
@@ -54,7 +54,7 @@ function renderStrapiContent(content: any): string {
   </h1>
   <FormattedDate date={new Date(post.publication_date)} />
   <div class="flex my-4">
-    {post.topics?.map((topic) => <TagContainer tag={topic} />)}
+    {post.topics?.map((topic) => <TopicContainer topic={topic} />)}
   </div>
   <div set:html={renderStrapiContent(post.content)} />
 </Page>

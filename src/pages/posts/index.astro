@@ -22,7 +22,7 @@ const posts = await getPosts();
           {
             posts.map((post) => (
                 <li>
-                  <a href={`/blog/${post.documentId}/`}>
+                  <a href={`/posts/${post.documentId}/`}>
                     <h4 class="title">{post.title}</h4>
                     <p class="date">
                       <FormattedDate date={new Date(post.publication_date)} />

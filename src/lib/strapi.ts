@@ -118,15 +118,8 @@ export async function getPostBySlug(slug: string): Promise<Post | null> {
 
 export async function getTopics(): Promise<Topic[]> {
     const response = await strapiFetch<Topic>("topics", {
-        populate: {
-            posts: {
-                populate: {
-                    thumbnail: true,
-                    topics: true,
-                },
-            },
-        },
-    });
+    },
+    );
 
     return response.data.map((item) => ({
         id: item.id,
@@ -139,14 +132,6 @@ export async function getTopics(): Promise<Topic[]> {
 export async function getTopicBySlug(slug: string): Promise<Topic | null> {
     const response = await strapiFetch<Topic>("topics", {
         filters: { documentId: { $eq: slug } },
-        populate: {
-            posts: {
-                populate: {
-                    thumbnail: true,
-                    topics: true,
-                },
-            },
-        },
     });
 
     if (response.data.length === 0) {

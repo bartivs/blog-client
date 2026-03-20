@@ -21,6 +21,6 @@ const topic = Astro.props;
 <Page title="Welcome!" description="">
   <div>
     <h1 class="text-3xl my-2"> Posts related to <u>{topic.name}</u>:</h1>
-    <PostsList posts={topic.posts ?? []} />
+    <PostsList posts={[]} />
   </div>
 </Page>

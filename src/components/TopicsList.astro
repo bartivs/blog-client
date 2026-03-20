@@ -1,12 +1,12 @@
 ---
 import type { Topic } from "../interfaces/strapi";
 import { getTopics } from "../lib/strapi";
-import TagContainer from "./TagContainer.astro";
+import TopicContainer from "./TopicContainer.astro";
 
 
 const topics = await getTopics(); 
 ---
 
 <div class="flex items-center lg:w-40">
-  { topics.length > 1 && topics?.map((topic) => <TagContainer tag={topic} />)}
+  { topics.length > 1 && topics?.map((topic) => <TopicContainer topic={topic} />)}
 </div>

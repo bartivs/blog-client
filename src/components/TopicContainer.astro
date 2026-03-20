@@ -1,0 +1,13 @@
+---
+import type { Topic } from '../interfaces/strapi';
+interface Props{
+    topic: Topic
+}
+
+
+const { topic } = Astro.props;
+---
+
+<a href={`/topics/${topic.documentId}`}>
+<span class=" text-xs border-2 p-1 mx-1 rounded-sm">{topic.name}</span>
+</a>
