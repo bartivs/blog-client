@@ -1,13 +1,13 @@
 ---
-import type { Tag } from '../interfaces/keystone';
+import type { Topic } from '../interfaces/strapi';
 interface Props{
-    tag: Tag
+    tag: Topic
 }
 
 
 const { tag } = Astro.props;
 ---
 
-<a href={`/tags/${tag.id}`}>
+<a href={`/tags/${tag.documentId}`}>
 <span class=" text-xs border-2 p-1 mx-1 rounded-sm">{tag.name}</span>
 </a>

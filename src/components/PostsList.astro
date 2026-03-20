@@ -1,5 +1,5 @@
 ---
-import type { Post } from "../interfaces/keystone";
+import type { Post } from "../interfaces/strapi";
 import FormattedDate from "./FormattedDate.astro";
 import TagContainer from "./TagContainer.astro";
 import TagsList from "./TagsList.astro";
@@ -17,26 +17,21 @@ const { posts } = Astro.props;
   </div>
   <div class="flex flex-col flex-1">
     {
-      posts?.map((post) => {
-        if (post.published) {
-          return (
+      posts?.map((post) => (
             <div class="border-b-2 py-2 border-white flex justify-between">
               <div>
-                <a href={`/blog/${post.id}/`}>{post.title}</a>
+                <a href={`/blog/${post.documentId}/`}>{post.title}</a>
                 <div class="mt-1">
-                  {post.tags?.map((tag) => (
-                    <TagContainer tag={tag} />
+                  {post.topics?.map((topic) => (
+                    <TagContainer tag={topic} />
                   ))}
                 </div>
               </div>
               <div>
-                <FormattedDate date={new Date(post.pubDate)} />
+                <FormattedDate date={new Date(post.publication_date)} />
               </div>
             </div>
-          );
-        }
-        return null
-      })
+      ))
     }
   </div>
 </div>

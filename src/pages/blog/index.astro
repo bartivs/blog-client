@@ -2,11 +2,11 @@
 import BaseHead from "../../components/BaseHead.astro";
 import Header from "../../components/Header.astro";
 import Footer from "../../components/Footer.astro";
-import { getCollection } from "../../lib/keystone";
+import { getPosts } from "../../lib/strapi";
 import { SITE_TITLE, SITE_DESCRIPTION } from "../../consts";
 import FormattedDate from "../../components/FormattedDate.astro";
 
-const posts = await getCollection("post");
+const posts = await getPosts();
 ---
 
 <!DOCTYPE html>
@@ -20,14 +20,12 @@ const posts = await getCollection("post");
       <section>
         <ul class="flex gap-10">
           {
-            !!posts &&
-              posts.map((post) => (
+            posts.map((post) => (
                 <li>
-                  <a href={`/blog/${post.id}/`}>
+                  <a href={`/blog/${post.documentId}/`}>
                     <h4 class="title">{post.title}</h4>
-                    <h5> {post.description} </h5>
                     <p class="date">
-                      <FormattedDate date={new Date(post.pubDate)} />
+                      <FormattedDate date={new Date(post.publication_date)} />
                     </p>
                   </a>
                 </li>

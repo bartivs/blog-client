@@ -1,13 +1,12 @@
 ---
 import Layout from "../../layouts/BlogPost.astro";
-import type  {Post} from "../../interfaces/keystone";
+import type  {Post} from "../../interfaces/strapi";
 ---
 
 
 <Layout
   title="Welcome!"
-  description="A little about me."
-  pubDate={new Date("July 30 2023")}
+  publication_date={new Date("July 30 2023")}
 >
   <p>
     Hello, my name is Barti! I'm a Full Stack software developer located in

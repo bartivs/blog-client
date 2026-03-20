@@ -1,12 +1,12 @@
 ---
-import type { Tag } from "../interfaces/keystone";
-import { getCollection } from "../lib/keystone";
+import type { Topic } from "../interfaces/strapi";
+import { getTopics } from "../lib/strapi";
 import TagContainer from "./TagContainer.astro";
 
 
-const tags = (await getCollection("tag")) as Tag[] ?? []; 
+const topics = await getTopics(); 
 ---
 
 <div class="flex items-center lg:w-40">
-  { tags.length > 1 && tags?.map((tag) => <TagContainer tag={tag} />)}
+  { topics.length > 1 && topics?.map((topic) => <TagContainer tag={topic} />)}
 </div>

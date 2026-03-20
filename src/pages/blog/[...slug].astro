@@ -5,15 +5,14 @@ import FormattedDate from "../../components/FormattedDate.astro";
 import Page from "../../components/Page.astro";
 import TagContainer from "../../components/TagContainer.astro";
 import { SITE_DESCRIPTION } from "../../consts";
-import type { Post } from "../../interfaces/keystone";
+import type { Post } from "../../interfaces/strapi";
 import BlogPost from "../../layouts/BlogPost.astro";
-import { getCollection } from "../../lib/keystone";
-import { DocumentRenderer } from "@keystone-6/document-renderer";
+import { getPosts } from "../../lib/strapi";
 
 export async function getStaticPaths() {
-  const posts = await getCollection("post");
-  return posts?.map((post) => ({
-    params: { slug: post.id },
+  const posts = await getPosts();
+  return posts.map((post) => ({
+    params: { slug: post.documentId },
     props: post,
   }));
 }
@@ -21,15 +20,41 @@ export async function getStaticPaths() {
 type Props = Post;
 
 const post = Astro.props;
+
+function renderStrapiContent(content: any): string {
+    if (!content || !content.blocks) return "";
+    
+    return content.blocks.map((block: any) => {
+        switch (block.type) {
+            case "paragraph":
+                return `<p>${block.children.map((child: any) => child.text).join("")}</p>`;
+            case "heading":
+                return `<h${block.level || 2}>${block.children.map((child: any) => child.text).join("")}</h${block.level || 2}>`;
+            case "list":
+                const items = block.items.map((item: any) => 
+                    `<li>${item.children.map((child: any) => child.text).join("")}</li>`
+                ).join("");
+                return block.format === "ordered" ? `<ol>${items}</ol>` : `<ul>${items}</ul>`;
+            case "code":
+                return `<pre><code>${block.children.map((child: any) => child.text).join("")}</code></pre>`;
+            case "quote":
+                return `<blockquote>${block.children.map((child: any) => child.text).join("")}</blockquote>`;
+            case "image":
+                return `<img src="${block.image}" alt="${block.children?.[0]?.text || ""}" />`;
+            default:
+                return "";
+        }
+    }).join("");
+}
 ---
 
-<Page title={post.title} description={post.description}>
+<Page title={post.title} description={post.title}>
   <h1 class="text-4xl font-bold">
     {post.title}
   </h1>
-  <FormattedDate date={new Date(post.pubDate)} />
+  <FormattedDate date={new Date(post.publication_date)} />
   <div class="flex my-4">
-    {post.tags?.map((tag) => <TagContainer tag={tag} />)}
+    {post.topics?.map((topic) => <TagContainer tag={topic} />)}
   </div>
-  <DocumentRenderer document={post.content.document} />
+  <div set:html={renderStrapiContent(post.content)} />
 </Page>

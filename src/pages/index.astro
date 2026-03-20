@@ -1,14 +1,11 @@
 ---
 import Page from "../components/Page.astro";
-import { getCollection } from "../lib/keystone";
-import type { Post, Tag } from "../interfaces/keystone";
-import FormattedDate from "../components/FormattedDate.astro";
+import { getPosts, getTopics } from "../lib/strapi";
+import type { Post, Topic } from "../interfaces/strapi";
 import PostsList from "../components/PostsList.astro";
-import TagContainer from "../components/TagContainer.astro";
-import TagsList from "../components/TagsList.astro";
 
-const posts = (await getCollection("post")) as Post[];
-const tags = (await getCollection("tag")) as Tag[];
+const posts = await getPosts();
+const topics = await getTopics();
 ---
 
 <Page title="Welcome!" description="">

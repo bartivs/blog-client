@@ -2,51 +2,25 @@
 import Page from "../../components/Page.astro";
 import PostsList from "../../components/PostsList.astro";
 import TagsList from "../../components/TagsList.astro";
-import type { Post, Tag } from "../../interfaces/keystone";
-import fetchApi, { getCollection } from "../../lib/keystone";
+import type { Topic } from "../../interfaces/strapi";
+import { getTopics } from "../../lib/strapi";
 
 export async function getStaticPaths() {
-  const { tags } = await fetchApi({
-    queryGraphQL: `
-              query Query {
-                tags(where: {posts: {some : {published: {equals: true}} }}) {
-                id
-                name 
-                posts(where: {published: {equals : true }}) {
-                id
-                author {
-                    name
-                }
-                content {
-                    document
-                }
-                title
-                pubDate
-                published
-                description
-                tags{
-                    id
-                    name
-                  }
-                }
-                }
-            } 
-      `,
-  });
-  return tags?.map((tag : Tag) => ({
-    params: { slug: tag.id },
-    props: tag,
+  const topics = await getTopics();
+  return topics.map((topic: Topic) => ({
+    params: { slug: topic.documentId },
+    props: topic,
   }));
 }
 
-type Props = Tag;
+type Props = Topic;
 
-const tag = Astro.props;
+const topic = Astro.props;
 ---
 
 <Page title="Welcome!" description="">
   <div>
-    <h1 class="text-3xl my-2"> Posts related to <u>{tag.name}</u>:</h1>
-    <PostsList posts={tag.posts ?? []} />
+    <h1 class="text-3xl my-2"> Posts related to <u>{topic.name}</u>:</h1>
+    <PostsList posts={topic.posts ?? []} />
   </div>
 </Page>
