@@ -9,7 +9,7 @@ const { references } = Astro.props;
 ---
 
 {references && references.length > 0 && (
-    <div class="mt-8 pt-8 border-t border-slate-600 text-white">
+    <div class="mt-8 pt-8 border-t border-slate-600">
         <h2 class="text-xl font-bold mb-4">References</h2>
         <ul class="list-disc list-inside space-y-2">
             {references.map((ref: Reference) => (

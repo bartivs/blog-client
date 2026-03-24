@@ -1,4 +1,4 @@
-import type { Post, Topic, StrapiResponse } from "../interfaces/strapi";
+import type { Post, Topic, About, StrapiResponse } from "../interfaces/strapi";
 
 const STRAPI_URL = import.meta.env.STRAPI_URL || "http://localhost:1337";
 const STRAPI_TOKEN = import.meta.env.STRAPI_API_TOKEN || "";
@@ -142,4 +142,13 @@ export async function getTopicBySlug(slug: string): Promise<Topic | null> {
     return {
         ...item,
     };
+}
+
+export async function getAbout(): Promise<About | null> {
+    const response = await strapiFetch<About>("about");
+    if (!response.data || response.data.length === 0) {
+        return null;
+    }
+    // @ts-ignore
+    return response.data;
 }

@@ -1,3 +1,5 @@
+import type { BlocksContent } from "@strapi/blocks-react-renderer";
+
 export interface Reference {
     id: number;
     documentId: string;
@@ -16,7 +18,7 @@ export interface Post {
     id: number;
     documentId: string;
     title: string;
-    content: any;
+    content: BlocksContent;
     publication_date: string;
     thumbnail?: {
         id: number;
@@ -36,6 +38,11 @@ export interface StrapiResponse<T> {
             total: number;
         };
     };
+}
+
+export interface About {
+    title: string;
+    content: BlocksContent;
 }
 
 export interface StrapiItem<T> {
