@@ -1,11 +1,13 @@
 ---
+import { BlocksRenderer } from "@strapi/blocks-react-renderer";
 import BaseHead from "../../components/BaseHead.astro";
 import Footer from "../../components/Footer.astro";
 import FormattedDate from "../../components/FormattedDate.astro";
 import Page from "../../components/Page.astro";
 import TopicContainer from "../../components/TopicContainer.astro";
+import References from "../../components/References.astro";
 import { SITE_DESCRIPTION } from "../../consts";
-import type { Post } from "../../interfaces/strapi";
+import type { Post, Topic } from "../../interfaces/strapi";
 import BlogPost from "../../layouts/BlogPost.astro";
 import { getPosts } from "../../lib/strapi";
 
@@ -21,31 +23,6 @@ type Props = Post;
 
 const post = Astro.props;
 
-function renderStrapiContent(content: any): string {
-    if (!content || !content.blocks) return "";
-    
-    return content.blocks.map((block: any) => {
-        switch (block.type) {
-            case "paragraph":
-                return `<p>${block.children.map((child: any) => child.text).join("")}</p>`;
-            case "heading":
-                return `<h${block.level || 2}>${block.children.map((child: any) => child.text).join("")}</h${block.level || 2}>`;
-            case "list":
-                const items = block.items.map((item: any) => 
-                    `<li>${item.children.map((child: any) => child.text).join("")}</li>`
-                ).join("");
-                return block.format === "ordered" ? `<ol>${items}</ol>` : `<ul>${items}</ul>`;
-            case "code":
-                return `<pre><code>${block.children.map((child: any) => child.text).join("")}</code></pre>`;
-            case "quote":
-                return `<blockquote>${block.children.map((child: any) => child.text).join("")}</blockquote>`;
-            case "image":
-                return `<img src="${block.image}" alt="${block.children?.[0]?.text || ""}" />`;
-            default:
-                return "";
-        }
-    }).join("");
-}
 ---
 
 <Page title={post.title} description={post.title}>
@@ -54,7 +31,8 @@ function renderStrapiContent(content: any): string {
   </h1>
   <FormattedDate date={new Date(post.publication_date)} />
   <div class="flex my-4">
-    {post.topics?.map((topic) => <TopicContainer topic={topic} />)}
+    {post.topics?.map((topic: Topic) => <TopicContainer topic={topic} />)}
   </div>
-  <div set:html={renderStrapiContent(post.content)} />
+  <BlocksRenderer content={post.content} />
+  <References references={post.references || []} />
 </Page>
