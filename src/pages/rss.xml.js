@@ -1,16 +1,18 @@
 import rss from '@astrojs/rss';
-import { getCollection } from 'astro:content';
+import { getPosts } from '../lib/strapi';
 import { SITE_TITLE, SITE_DESCRIPTION } from '../consts';
 
 export async function get(context) {
-	const posts = await getCollection('post');
+	const posts = await getPosts();
 	return rss({
 		title: SITE_TITLE,
 		description: SITE_DESCRIPTION,
 		site: context.site,
 		items: posts.map((post) => ({
-			...post.data,
-			link: `/posts/${post.slug}/`,
+			title: post.title,
+			description: post.title,
+			pubDate: new Date(post.publication_date),
+			link: `/posts/${post.documentId}/`,
 		})),
 	});
 }
