@@ -33,6 +33,8 @@ const post = Astro.props;
   <div class="flex my-4">
     {post.topics?.map((topic: Topic) => <TopicContainer topic={topic} />)}
   </div>
-  <BlocksRenderer content={post.content} />
+  <div class="strapi-content">
+    <BlocksRenderer content={post.content} />
+  </div>
   <References references={post.references || []} />
 </Page>

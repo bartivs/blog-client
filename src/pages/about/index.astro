@@ -11,7 +11,9 @@ console.log(about);
   {about && (
     <>
       <h1 class="text-4xl font-bold mb-6">{about.title}</h1>
-      <BlocksRenderer content={about.content} />
+      <div class="strapi-content">
+        <BlocksRenderer content={about.content} />
+      </div>
     </>
   )}
 </Page>
