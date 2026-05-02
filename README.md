@@ -59,6 +59,20 @@ All commands are run from the root of the project, from a terminal:
 | `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
 | `npm run astro -- --help` | Get help using the Astro CLI                     |
 
+## Environment Variables
+
+Create your local env file from the example:
+
+```bash
+cp .env.example .env
+```
+
+Required variables:
+
+- `SITE_URL`: Your production site URL (for RSS feed, sitemap, and canonical links)
+- `STRAPI_URL`: Base URL of your Strapi API
+- `STRAPI_API_TOKEN`: Strapi API token used to fetch content
+
 ## 👀 Want to learn more?
 
 Check out [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
