@@ -101,3 +101,80 @@ b {
 	color: #dbeafe;
 	text-decoration-color: #dbeafe;
 }
+
+.strapi-content h1,
+.strapi-content h2,
+.strapi-content h3,
+.strapi-content h4,
+.strapi-content h5,
+.strapi-content h6 {
+	font-weight: 700;
+	line-height: 1.25;
+	margin: 1.25rem 0 0.75rem;
+	color: #f8fafc;
+}
+
+.strapi-content h1 {
+	font-size: 2rem;
+}
+
+.strapi-content h2 {
+	font-size: 1.75rem;
+}
+
+.strapi-content h3 {
+	font-size: 1.5rem;
+}
+
+.strapi-content h4 {
+	font-size: 1.25rem;
+}
+
+.strapi-content h5 {
+	font-size: 1.1rem;
+}
+
+.strapi-content h6 {
+	font-size: 1rem;
+}
+
+.strapi-content ul,
+.strapi-content ol {
+	margin: 1rem 0;
+	padding-left: 1.5rem;
+}
+
+.strapi-content ul {
+	list-style: disc;
+}
+
+.strapi-content ol {
+	list-style: decimal;
+}
+
+.strapi-content li {
+	margin: 0.35rem 0;
+}
+
+.strapi-content code {
+	font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+	font-size: 0.9em;
+	background-color: rgba(148, 163, 184, 0.18);
+	color: #e2e8f0;
+	padding: 0.1em 0.35em;
+	border-radius: 0.25rem;
+}
+
+.strapi-content pre {
+	overflow-x: auto;
+	background-color: rgba(15, 23, 42, 0.75);
+	padding: 0.9rem 1rem;
+	border-radius: 0.5rem;
+	margin: 1rem 0;
+}
+
+.strapi-content pre code {
+	background: transparent;
+	padding: 0;
+	border-radius: 0;
+}
