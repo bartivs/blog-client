@@ -88,7 +88,7 @@ export async function getPosts(filters?: Record<string, any>): Promise<Post[]> {
             topics: true,
             references: true,
         },
-        sort: "publication_date",
+        sort: "publication_date:desc",
         pagination: {
             pageSize: 100,
         },
