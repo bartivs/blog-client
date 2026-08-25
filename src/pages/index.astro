@@ -1,15 +1,57 @@
 ---
 import Page from "../components/Page.astro";
-import { getPosts, getTopics } from "../lib/strapi";
-import type { Post, Topic } from "../interfaces/strapi";
 import PostsList from "../components/PostsList.astro";
+import {
+  DEFAULT_HOME_PAGE,
+  DEFAULT_SITE_PROFILE,
+  DEFAULT_SOCIAL_IMAGE,
+} from "../consts";
+import { getHomePage, getPosts, getSiteProfile, resolveMediaUrl } from "../lib/strapi";
 
 const posts = await getPosts();
-const topics = await getTopics();
+const homePage = await getHomePage();
+const siteProfile = await getSiteProfile();
+
+const title = homePage?.seoTitle || DEFAULT_HOME_PAGE.seoTitle;
+const description = homePage?.seoDescription || DEFAULT_HOME_PAGE.seoDescription;
+const image = resolveMediaUrl(siteProfile?.socialImage?.url) || DEFAULT_SOCIAL_IMAGE;
+const heroTitle = homePage?.heroTitle || DEFAULT_HOME_PAGE.heroTitle;
+const heroBody = homePage?.heroBody || DEFAULT_HOME_PAGE.heroBody;
+const skillsText = homePage?.skillsText || siteProfile?.knowsAbout || DEFAULT_HOME_PAGE.skillsText;
+const linkedInUrl = siteProfile?.linkedinUrl || DEFAULT_SITE_PROFILE.linkedinUrl;
+const githubUrl = siteProfile?.githubUrl || DEFAULT_SITE_PROFILE.githubUrl;
+const resumeUrl = siteProfile?.resumeUrl || DEFAULT_SITE_PROFILE.resumeUrl;
+const schemaResumeUrl = siteProfile?.schemaResumeUrl || DEFAULT_SITE_PROFILE.schemaResumeUrl;
+const schemaName = siteProfile?.schemaName || DEFAULT_SITE_PROFILE.schemaName;
+const knowsAbout = skillsText
+  .split(",")
+  .map((item) => item.trim())
+  .filter(Boolean);
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "Person",
+  name: schemaName,
+  sameAs: [linkedInUrl, githubUrl, schemaResumeUrl],
+  knowsAbout,
+};
 ---
 
-<Page title="Welcome!" description="">
+<Page title={title} description={description} image={image} jsonLd={jsonLd}>
   <div>
+    <section class="mb-10 border-b border-slate-600 pb-8">
+      <h1 class="text-4xl font-bold mb-4">{heroTitle}</h1>
+      <p class="text-lg text-slate-200 mb-4">{heroBody}</p>
+      <p class="text-sm text-slate-300 mb-6">
+        <strong>Skills:</strong> {skillsText}
+      </p>
+      <div class="flex flex-wrap gap-4 text-sm md:text-base">
+        <a class="underline hover:text-blue-400" href={resumeUrl} target="_blank" rel="noopener noreferrer">Resume</a>
+        <a class="underline hover:text-blue-400" href={linkedInUrl} target="_blank" rel="noopener noreferrer">LinkedIn</a>
+        <a class="underline hover:text-blue-400" href={githubUrl} target="_blank" rel="noopener noreferrer">GitHub</a>
+        <a class="underline hover:text-blue-400" href="/about">About</a>
+      </div>
+    </section>
     <PostsList posts={posts} />
   </div>
 </Page>

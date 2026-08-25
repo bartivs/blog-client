@@ -1,10 +1,13 @@
 ---
-import { AUTHOR, GITHUB_URL } from "../consts";
-const today = new Date();
+import { AUTHOR } from "../consts";
+import { getSiteProfile } from "../lib/strapi";
+
+const siteProfile = await getSiteProfile();
+const author = siteProfile?.displayName || AUTHOR;
 ---
 
 <footer class="text-center w-[100vw] p-2">
   <a href="/about" class="hover:text-blue-400 mr-4">About</a>
   <a href="/rss.xml" class="hover:text-blue-400 mr-4">RSS</a>
-  &copy; {2023}. Made by Me.
+  &copy; {2023}. {author}
 </footer>

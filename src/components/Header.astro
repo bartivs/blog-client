@@ -1,19 +1,21 @@
 ---
-import HeaderLink from "./HeaderLink.astro";
-import { GITHUB_URL, SITE_TITLE } from "../consts";
+import { DEFAULT_SITE_PROFILE, GITHUB_URL, SITE_TITLE } from "../consts";
+import { getSiteProfile } from "../lib/strapi";
+
+const siteProfile = await getSiteProfile();
+const siteTitle = siteProfile?.siteTitle || SITE_TITLE;
+const linkedInUrl = siteProfile?.linkedinUrl || DEFAULT_SITE_PROFILE.linkedinUrl;
+const githubUrl = siteProfile?.githubUrl || GITHUB_URL;
 ---
 
 <header class="bg-transparent mb-4 flex justify-center py-4">
 	<nav class="px-4 lg:px-0 container flex items-center justify-between">
 		<div>
-			<h2><a href="/">{SITE_TITLE}</a></h2>
+			<h2><a href="/">{siteTitle}</a></h2>
 		</div>
-		<!-- <div class="internal-links">
-			<HeaderLink href="/">Home</HeaderLink>
-		</div> -->
 		<div class="flex gap-2">
-			<a href="https://www.linkedin.com/in/barti-valdez-80a3a5168/" target="_blank">
-				<span class="sr-only">Conect with me in LinkedIn</span>
+			<a href={linkedInUrl} target="_blank" rel="noopener noreferrer">
+				<span class="sr-only">Connect with me on LinkedIn</span>
 				<svg
 					xmlns="http://www.w3.org/2000/svg"
 					width="32"
@@ -27,8 +29,8 @@ import { GITHUB_URL, SITE_TITLE } from "../consts";
 					></path>
 				</svg>
 			</a>
-			<a href={GITHUB_URL} target="_blank">
-				<span class="sr-only">Visit to my GitHub page</span>
+			<a href={githubUrl} target="_blank" rel="noopener noreferrer">
+				<span class="sr-only">Visit my GitHub page</span>
 				<svg
 					viewBox="0 0 16 16"
 					aria-hidden="true"
@@ -43,4 +45,3 @@ import { GITHUB_URL, SITE_TITLE } from "../consts";
 		</div>
 	</nav>
 </header>
-<style></style>

@@ -1,13 +1,20 @@
 ---
 import { BlocksRenderer } from "@strapi/blocks-react-renderer";
 import Page from "../../components/Page.astro";
-import { getAbout } from "../../lib/strapi";
+import {
+  DEFAULT_ABOUT_PAGE,
+  DEFAULT_SOCIAL_IMAGE,
+} from "../../consts";
+import { getAbout, getSiteProfile, resolveMediaUrl } from "../../lib/strapi";
 
 const about = await getAbout();
-console.log(about);
+const siteProfile = await getSiteProfile();
+const title = about?.seoTitle || DEFAULT_ABOUT_PAGE.seoTitle;
+const description = about?.seoDescription || siteProfile?.summary || DEFAULT_ABOUT_PAGE.seoDescription;
+const image = resolveMediaUrl(siteProfile?.socialImage?.url) || DEFAULT_SOCIAL_IMAGE;
 ---
 
-<Page title={about?.title || "About"} description={about?.title || "About"}>
+<Page title={title} description={description} image={image}>
   {about && (
     <>
       <h1 class="text-4xl font-bold mb-6">{about.title}</h1>

@@ -6,14 +6,16 @@ import BaseHead from "./BaseHead.astro";
 interface Props {
   title: string;
   description?: string;
+  image?: string;
+  jsonLd?: Record<string, unknown> | null;
 }
 
-const { title, description } = Astro.props;
+const { title, description, image, jsonLd } = Astro.props;
 ---
 
 <html lang="en">
   <head>
-    <BaseHead title={title} description={description ?? ""} />
+    <BaseHead title={title} description={description ?? ""} image={image} jsonLd={jsonLd} />
   </head>
   <body class="h-[100vh] w-[100vw] bg-slate-800 flex flex-col">
     <Header />

@@ -1,8 +1,15 @@
-import type { Post, Topic, About, StrapiResponse } from "../interfaces/strapi";
+import type {
+    About,
+    HomePage,
+    Post,
+    SiteProfile,
+    StrapiCollectionResponse,
+    StrapiSingleResponse,
+    Topic,
+} from "../interfaces/strapi";
 
 const STRAPI_URL = import.meta.env.STRAPI_URL || "http://localhost:1337";
 const STRAPI_TOKEN = import.meta.env.STRAPI_API_TOKEN || "";
-console.log(STRAPI_TOKEN);
 
 interface FetchOptions {
     filters?: Record<string, any>;
@@ -14,23 +21,24 @@ interface FetchOptions {
     };
 }
 
-async function strapiFetch<T>(
-    endpoint: string,
-    options: FetchOptions = {}
-): Promise<StrapiResponse<T[]>> {
+let siteProfilePromise: Promise<SiteProfile | null> | null = null;
+let homePagePromise: Promise<HomePage | null> | null = null;
+let aboutPromise: Promise<About | null> | null = null;
+
+async function strapiRequest<T>(endpoint: string, options: FetchOptions = {}): Promise<T> {
     const params = new URLSearchParams();
     if (options.filters) {
         const buildFilterParams = (prefix: string, obj: any) => {
             Object.entries(obj).forEach(([key, value]) => {
                 const newKey = prefix ? `${prefix}[${key}]` : `filters[${key}]`;
-                if (typeof value === 'object' && value !== null) {
+                if (typeof value === "object" && value !== null) {
                     buildFilterParams(newKey, value);
                 } else {
-                    params.append(newKey, value);
+                    params.append(newKey, String(value));
                 }
             });
         };
-        buildFilterParams('', options.filters);
+        buildFilterParams("", options.filters);
     }
 
     if (options.populate) {
@@ -49,7 +57,7 @@ async function strapiFetch<T>(
 
     if (options.sort) {
         const sortArray = Array.isArray(options.sort) ? options.sort : [options.sort];
-        sortArray.forEach((s) => params.append("sort", s));
+        sortArray.forEach((sortValue) => params.append("sort", sortValue));
     }
 
     if (options.pagination) {
@@ -68,20 +76,50 @@ async function strapiFetch<T>(
     };
 
     if (STRAPI_TOKEN) {
-        headers["Authorization"] = `Bearer ${STRAPI_TOKEN}`;
+        headers.Authorization = `Bearer ${STRAPI_TOKEN}`;
     }
 
-    console.log('url', url);
-    const res = await fetch(url, { headers });
-    if (!res.ok) {
-        throw new Error(`Strapi API error: ${res.status} ${res.statusText} `);
+    const response = await fetch(url, { headers });
+    if (!response.ok) {
+        throw new Error(`Strapi API error: ${response.status} ${response.statusText}`);
     }
 
-    return res.json();
+    return response.json();
+}
+
+async function strapiFetchCollection<T>(
+    endpoint: string,
+    options: FetchOptions = {}
+): Promise<StrapiCollectionResponse<T>> {
+    return strapiRequest<StrapiCollectionResponse<T>>(endpoint, options);
+}
+
+async function strapiFetchSingle<T>(
+    endpoint: string,
+    options: FetchOptions = {}
+): Promise<T | null> {
+    const response = await strapiRequest<StrapiSingleResponse<T>>(endpoint, options);
+    return response.data ?? null;
+}
+
+export function resolveMediaUrl(url?: string): string | undefined {
+    if (!url) {
+        return undefined;
+    }
+
+    if (url.startsWith("http://") || url.startsWith("https://")) {
+        return url;
+    }
+
+    if (url.startsWith("/")) {
+        return `${STRAPI_URL}${url}`;
+    }
+
+    return url;
 }
 
 export async function getPosts(filters?: Record<string, any>): Promise<Post[]> {
-    const response = await strapiFetch<Post>("posts", {
+    const response = await strapiFetchCollection<Post>("posts", {
         filters,
         populate: {
             thumbnail: true,
@@ -100,7 +138,7 @@ export async function getPosts(filters?: Record<string, any>): Promise<Post[]> {
 }
 
 export async function getPostBySlug(slug: string): Promise<Post | null> {
-    const response = await strapiFetch<Post>("posts", {
+    const response = await strapiFetchCollection<Post>("posts", {
         filters: { documentId: { $eq: slug } },
         populate: {
             thumbnail: true,
@@ -113,16 +151,13 @@ export async function getPostBySlug(slug: string): Promise<Post | null> {
         return null;
     }
 
-    const item = response.data[0];
     return {
-        ...item
+        ...response.data[0],
     };
 }
 
 export async function getTopics(): Promise<Topic[]> {
-    const response = await strapiFetch<Topic>("topics", {
-    },
-    );
+    const response = await strapiFetchCollection<Topic>("topics");
 
     return response.data.map((item) => ({
         ...item,
@@ -130,7 +165,7 @@ export async function getTopics(): Promise<Topic[]> {
 }
 
 export async function getTopicBySlug(slug: string): Promise<Topic | null> {
-    const response = await strapiFetch<Topic>("topics", {
+    const response = await strapiFetchCollection<Topic>("topics", {
         filters: { documentId: { $eq: slug } },
     });
 
@@ -138,17 +173,26 @@ export async function getTopicBySlug(slug: string): Promise<Topic | null> {
         return null;
     }
 
-    const item = response.data[0];
     return {
-        ...item,
+        ...response.data[0],
     };
 }
 
 export async function getAbout(): Promise<About | null> {
-    const response = await strapiFetch<About>("about");
-    if (!response.data || response.data.length === 0) {
-        return null;
-    }
-    // @ts-ignore
-    return response.data;
+    aboutPromise ??= strapiFetchSingle<About>("about");
+    return aboutPromise;
+}
+
+export async function getSiteProfile(): Promise<SiteProfile | null> {
+    siteProfilePromise ??= strapiFetchSingle<SiteProfile>("site-profile", {
+        populate: {
+            socialImage: true,
+        },
+    });
+    return siteProfilePromise;
+}
+
+export async function getHomePage(): Promise<HomePage | null> {
+    homePagePromise ??= strapiFetchSingle<HomePage>("home-page");
+    return homePagePromise;
 }
